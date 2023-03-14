@@ -1,0 +1,40 @@
+{
+    "manifest_version": 3,
+    "name": "ChatDelete",
+    "version": "2.0",
+    "description": "A Chrome extension to delete multiple chat instances on ChatGPT.",
+    "permissions": [
+      "tabs",
+      "scripting",
+      "storage"
+    ],
+    "host_permissions": [
+      "https://chatgpt.com/"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://chatgpt.com/*"],
+        "all_frames": true,
+        "js": ["content.js"]
+      }
+    ],
+    "commands": {
+      "delete": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+D"
+        },
+        "description": "Delete selected chat instances"
+      }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["popup.html", "popup.js", "styles.css"],
+        "matches": ["https://chatgpt.com/*"]
+      }
+    ],
+    "version_name": "2.0"
+  }
+  
