@@ -1,42 +1,50 @@
-let chatCounter = 0;
-
-function createChat() {
-  const chatName = `Chat ${++chatCounter}`;
-  const chatInstance = document.createElement("div");
-  chatInstance.className = "chat-instance";
-  chatInstance.innerHTML = `
-    <input type="checkbox" class="chat-checkbox">
-    <div class="chat-info">
-      <div class="chat-name">${chatName}</div>
-      <div class="chat-preview">No messages yet.</div>
-    </div>
-    <div class="chat-close">x</div>
-  `;
-  document.querySelector(".chat-sidebar").appendChild(chatInstance);
-  updateChatList();
-}
-
-function updateChatList() {
-  chrome.runtime.sendMessage({ type: "updateChatList" });
-}
-
-function deleteChatInstances() {
-  const chatInstances = Array.from(document.querySelectorAll(".chat-instance"));
-  if (chatInstances.length === 0) {
-    console.log("No chat instances found.");
-    return;
-  }
-  chatInstances.forEach(chat => {
-    chat.remove();
+const chatListObserver = new MutationObserver(() => {
+    const chatInstances = document.querySelectorAll(".chat-instance");
+  
+    chatInstances.forEach(chat => {
+      if (!chat.querySelector(".chat-checkbox")) {
+        const chatCheckbox = document.createElement("input");
+        chatCheckbox.type = "radio";
+        chatCheckbox.name = "chat-instance";
+        chatCheckbox.className = "chat-checkbox";
+        chat.insertBefore(chatCheckbox, chat.firstChild);
+      }
+    });
+  
+    const deleteButton = document.querySelector(".chat-delete");
+    if (!deleteButton) {
+      const newDeleteButton = document.createElement("button");
+      newDeleteButton.innerText = "Delete Selected Chats";
+      newDeleteButton.className = "chat-delete";
+      newDeleteButton.style.display = "none";
+      newDeleteButton.addEventListener("click", () => {
+        const selectedChat = document.querySelector(".chat-checkbox:checked");
+        if (!selectedChat) {
+          alert("No chat selected.");
+          return;
+        }
+        if (!confirm(`Are you sure you want to delete this chat?`)) {
+          return;
+        }
+        selectedChat.closest(".chat-instance").remove();
+        newDeleteButton.style.display = "none";
+        alert(`Chat deleted.`);
+      });
+      document.querySelector(".chat-header").appendChild(newDeleteButton);
+    }
+  
+    const chatCheckboxes = document.querySelectorAll(".chat-checkbox");
+    chatCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        const selectedChat = document.querySelector(".chat-checkbox:checked");
+        if (selectedChat) {
+          deleteButton.style.display = "block";
+        } else {
+          deleteButton.style.display = "none";
+        }
+      });
+    });
   });
-  console.log(`${chatInstances.length} chat instances deleted.`);
-}
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message === "deleteAllChats") {
-    deleteChatInstances();
-  }
-});
-
-document.querySelector(".chat-create").addEventListener("click", createChat);
-updateChatList();
+  
+  chatListObserver.observe(document.querySelector(".chat-list"), { childList: true });
+  

@@ -2,43 +2,42 @@
     width: 300px;
     padding: 10px;
     font-size: 16px;
-  }
-  
-  .search-box-container {
+    }
+    
+    .search-box-container {
     margin-bottom: 10px;
-  }
-  
-  .chat-list-container {
+    }
+    
+    .chat-list-container {
     max-height: 300px;
     overflow-y: auto;
-  }
-  
-  .chat-instance {
+    }
+    
+    .chat-instance {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 5px;
-  }
-  
-  .chat-checkbox {
+    }
+    
+    .chat-checkbox {
     margin-right: 5px;
-  }
-  
-  .chat-name {
+    }
+    
+    .chat-name {
     font-weight: bold;
     margin-right: 5px;
-  }
-  
-  .chat-preview {
+    }
+    
+    .chat-preview {
     color: #888;
     font-size: 14px;
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  
-  button {
+    }
+    
+    button {
     margin-right: 5px;
-  }
-  
+    }
