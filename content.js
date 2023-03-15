@@ -1,50 +1,47 @@
-const chatListObserver = new MutationObserver(() => {
-    const chatInstances = document.querySelectorAll(".chat-instance");
-  
-    chatInstances.forEach(chat => {
-      if (!chat.querySelector(".chat-checkbox")) {
-        const chatCheckbox = document.createElement("input");
-        chatCheckbox.type = "radio";
-        chatCheckbox.name = "chat-instance";
-        chatCheckbox.className = "chat-checkbox";
-        chat.insertBefore(chatCheckbox, chat.firstChild);
+class ContentController {
+  constructor() {
+    this.chatInstances = document.querySelectorAll('.chat-instance');
+  }
+
+  toggleChatSelection(chatSelectionEnabled) {
+    if (chatSelectionEnabled) {
+      this.addCheckboxes();
+    } else {
+      this.chatInstances.forEach((instance) => {
+        const checkbox = instance.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.remove();
+        }
+      });
+    }
+  }
+
+  addCheckboxes() {
+    this.chatInstances.forEach((chatInstance) => {
+      if (!chatInstance.querySelector('.chat-select-checkbox')) {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'chat-select-checkbox';
+        chatInstance.insertBefore(checkbox, chatInstance.firstChild);
       }
     });
-  
-    const deleteButton = document.querySelector(".chat-delete");
-    if (!deleteButton) {
-      const newDeleteButton = document.createElement("button");
-      newDeleteButton.innerText = "Delete Selected Chats";
-      newDeleteButton.className = "chat-delete";
-      newDeleteButton.style.display = "none";
-      newDeleteButton.addEventListener("click", () => {
-        const selectedChat = document.querySelector(".chat-checkbox:checked");
-        if (!selectedChat) {
-          alert("No chat selected.");
-          return;
-        }
-        if (!confirm(`Are you sure you want to delete this chat?`)) {
-          return;
-        }
-        selectedChat.closest(".chat-instance").remove();
-        newDeleteButton.style.display = "none";
-        alert(`Chat deleted.`);
-      });
-      document.querySelector(".chat-header").appendChild(newDeleteButton);
-    }
-  
-    const chatCheckboxes = document.querySelectorAll(".chat-checkbox");
-    chatCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener("change", () => {
-        const selectedChat = document.querySelector(".chat-checkbox:checked");
-        if (selectedChat) {
-          deleteButton.style.display = "block";
-        } else {
-          deleteButton.style.display = "none";
-        }
-      });
+  }
+
+  deleteSelectedChats() {
+    const selectedChats = document.querySelectorAll('.chat-instance input:checked');
+    selectedChats.forEach((checkbox) => {
+      const chatInstance = checkbox.closest('.chat-instance');
+      chatInstance.remove();
     });
-  });
-  
-  chatListObserver.observe(document.querySelector(".chat-list"), { childList: true });
-  
+  }
+}
+
+const contentController = new ContentController();
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'toggleChatSelection') {
+    contentController.toggleChatSelection(request.chatSelectionEnabled);
+  } else if (request.action === 'deleteSelectedChats') {
+    contentController.deleteSelectedChats();
+  }
+});

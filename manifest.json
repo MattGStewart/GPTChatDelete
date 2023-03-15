@@ -1,86 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Delete",
+  "name": "Multi-Chat Deletion for ChatGPT",
   "version": "1.0",
-  "description": "A Chrome extension to delete multiple chat instances on ChatGPT.",
-  "icons": [
-    {
-      "src": "icon16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "icon48.png",
-      "sizes": "48x48",
-      "type": "image/png"
-    },
-    {
-      "src": "icon128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    }
-  ],
-  "permissions": [
-    "scripting",
-    "storage",
-    "activeTab"
-  ],
-  "host_permissions": [
-    "https://chatgpt.com/"
-  ],
+  "description": "Enables multi-chat selection and deletion for ChatGPT web interface.",
+  "permissions": ["storage"],
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon16.png",
-      "32": "icon32.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
-    }
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://chatgpt.com/*"
-      ],
-      "all_frames": true,
-      "js": [
-        "content.js"
-      ]
-    }
-  ],
-  "commands": {
-    "delete": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+D"
-      },
-      "description": "Delete selected chat instances"
-    }
-  },
-  "web_accessible_resources": [
-    {
-      "resources": [
-        {
-          "file": "popup.html",
-          "allow": [
-            "scripting"
-          ]
-        },
-        {
-          "file": "popup.js",
-          "allow": [
-            "scripting"
-          ]
-        },
-        {
-          "file": "popup.css",
-          "allow": [
-            "scripting"
-          ]
-        }
-      ],
-      "matches": [
-        "https://chatgpt.com/*"
-      ]
+      "matches": ["*://*.openai.com/chat*"],
+      "css": ["content.css"],
+      "js": ["content.js"]
     }
   ]
 }

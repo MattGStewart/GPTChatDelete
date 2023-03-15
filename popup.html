@@ -1,25 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>ChatGPT Delete</title>
-    <link rel="stylesheet" href="popup.css">
+    <title>Multi-Chat Deletion</title>
   </head>
   <body>
-    <div class="container">
-      <div class="search-box-container">
-        <input id="searchBox" type="text" placeholder="Search chats...">
-      </div>
-      <div class="button-container">
-        <button id="deleteButton">Delete Selected Chats</button>
-        <button id="saveButton">Save Selection</button>
-        <button id="loadButton">Load Selection</button>
-      </div>
-      <div class="chat-list-container">
-      </div>
-    </div>
+    <button id="toggleChatSelection">Enable Chat Selection</button>
+    <button id="deleteSelectedChats">Delete Selected Chats</button>
     <script src="popup.js"></script>
-    <script src="content.js"></script>
-    <script src="background.js"></script>
   </body>
 </html>
